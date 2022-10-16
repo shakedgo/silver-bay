@@ -15,6 +15,7 @@ export default function Navbar() {
 			<Link to={"/sell"}>Sell to Us</Link>
 			<Link to={"/charts"}>Charts</Link>
 			<Link to={"/resources"}>Resources</Link>
+			<Link to={"/about"}>ABOUT</Link>
 		</div>
 	);
 }
