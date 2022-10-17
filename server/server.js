@@ -12,7 +12,7 @@ app.get("/api", (_req, res) => {
 	res.json({ username: "shakedgo" });
 });
 
-app.get("items", (_req, res) => {
+app.get("items", (req, res) => {
 	const uri = process.env.MONGO + "?retryWrites=true&w=majority";
 	const client = new MongoClient(uri, {
 		useNewUrlParser: true,
@@ -21,7 +21,7 @@ app.get("items", (_req, res) => {
 	});
 	client.connect();
 	const itemsCollection = client.db("silver-bay").collection("Items");
-	res.json(itemsCollection.find());
+	res.json(itemsCollection.find(req.params.sort)); // check if sort is json with the required sorts
 	client.close();
 });
 
