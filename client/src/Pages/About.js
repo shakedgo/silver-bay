@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 import Card from "../Components/Card";
 import Sort from "../Components/Sort";
 import "./About.scss";
@@ -17,7 +17,8 @@ export default function About() {
 			if (!sorts.price.includes(e)) sorts.price.push(e);
 			else sorts.price.splice(sorts.price.indexOf(e), 1);
 		}
-		//axios.get("/items", {params: {sorts}})
+		let updateSort = async () => await axios.get("/items", { params: { sorts: JSON.stringify(sorts) } });
+		updateSort();
 	};
 	return (
 		<div className="about">

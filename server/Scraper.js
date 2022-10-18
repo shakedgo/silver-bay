@@ -1,25 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const { MongoClient, ServerApiVersion } = require("mongodb");
-require("dotenv").config();
 
-const db = () => {
-	const uri = process.env.MONGO + "?retryWrites=true&w=majority";
-	const client = new MongoClient(uri, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		serverApi: ServerApiVersion.v1,
-	});
-	client.connect();
-	const itemsCollection = client.db("silver-bay").collection("Items");
-	itemsCollection.updateMany(
-		{ _id: 0.1 },
-		{ $set: { name: "Silver-test", material: "silver", price: 0.11 } },
-		{ upsert: true }
-	);
-	console.log("Insert");
-	client.close();
-};
 const URL = "http://scrapesite.com"; // site we scrape
 
 const scrape = () => {
@@ -39,6 +20,18 @@ const scrape = () => {
 	// 		});
 	// });
 };
+let queryBuilder = (sorts) => {
+	let query = "";
+	if (sorts.material.length > 1) {
+		query += "$or [";
+		sorts.material.forEach((e) => {
+			query += `{material: '${e}'},`;
+		});
+		query += "]";
+	} else if (sorts.material !== []) {
+		query += `{material: '${sorts.material[0]}'}`;
+	}
+	return query;
+};
 
-db();
-module.exports = { scrape, db, client };
+module.exports = { scrape, queryBuilder };
