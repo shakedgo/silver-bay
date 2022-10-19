@@ -1,0 +1,24 @@
+Silver-Bay
+
+Main Idea:
+This site lets people buy/sell/trade precious metals and collectible coins.
+
+Features:
+- The user should be able to post items that he sells.
+    * The user will fill a form about the item specs,
+      this data will be sent to the server that will insert the item to mongo
+- The user should be able to filter and search the items
+    * The user will get a list of items when he opens the website,
+      the filter/search will be done on the client side.
+- The system should update precious metals price with it's rate,
+  the user will define how much precentage above the rate his item will be.
+    * API - Current Precious Metal Price.
+- The user should be able to trade his items with other users.
+    * The user will have a message notification with the request for trade,
+    * The message will contain a link to the item that the user wants to exchange with the seller,
+      followed by a personal message to the seller.
+
+Reliable
+Available
+Scalable
+Maintainable
