@@ -6,17 +6,23 @@ This site lets people buy/sell/trade precious metals and collectible coins.
 Features:
 - The user should be able to post items that he sells.
     * The user will fill a form about the item specs,
-      this data will be sent to the server that will insert the item to mongo
-- The user should be able to filter and search the items
-    * The user will get a list of items when he opens the website,
+      this data will be sent to the server that will insert the item to mongo items collection.
+- The user should be able to filter and search the items without overloading the server.
+    * The user will get a list of items only once - when he opens the website,
       the filter/search will be done on the client side.
-- The system should update precious metals price with it's rate,
-  the user will define how much precentage above the rate his item will be.
+    * Refreshing the items will be done with react query for chaching
+- The system should update the precious metals prices according to it's rate,
+  the user will define how much precentage above the rate his item will cost.
     * API - Current Precious Metal Price.
 - The user should be able to trade his items with other users.
     * The user will have a message notification with the request for trade,
     * The message will contain a link to the item that the user wants to exchange with the seller,
       followed by a personal message to the seller.
+- The user should have wishlist/add to cart and watch it from any pc.
+    * Should be save on the user.
+- The system should keep user data safe.
+    * Hashed passwords, jwt login tokens via http only cookie (Not accessible to js)
+    * The data will be stored in mongo users collection. 
 
 Reliable
 Available
