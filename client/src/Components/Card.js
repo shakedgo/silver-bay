@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./Components.scss";
 
 // Replace all to get data from parent (About).
-export default function Card() {
+export default function Card(props) {
 	return (
 		<Link to={"/silver123"} className="card-container">
 			<div className="product-badge top-pick">Top Pick</div>
@@ -14,8 +14,8 @@ export default function Card() {
 				height={130}
 				alt="coin"
 			/>
-			<div className="item-name">2022 Great Britain 1 oz Silver Britannia BU </div>
-			<div className="item-price">26.5$</div>
+			<div className="item-name">{props.name}</div>
+			<div className="item-price">{props.price}</div>
 		</Link>
 	);
 }

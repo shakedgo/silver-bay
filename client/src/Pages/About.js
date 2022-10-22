@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../Components/Card";
 import Sort from "../Components/Sort";
@@ -9,6 +9,27 @@ export default function About() {
 		material: [],
 		price: [],
 	};
+	const [items, setItems] = useState([]);
+	const [sort, setSort] = useState(sorts);
+	let sortedItems = [];
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const res = await axios.get("/items");
+			setItems(res.data);
+		};
+		fetchData();
+	}, []);
+
+	useEffect(() => {
+		if (sort.material !== [] && sort.price !== []) {
+			items.forEach((item) => {
+				if (sort.material.includes(item.material) && sort.price.includes(item.price)) sortedItems.push(item);
+			});
+		}
+		sortedItems.map((item) => <Card props={item}></Card>);
+	}, [sort]);
+
 	const handleChange = (e, type) => {
 		if (type === "material") {
 			if (!sorts.material.includes(e)) sorts.material.push(e);
@@ -17,15 +38,19 @@ export default function About() {
 			if (!sorts.price.includes(e)) sorts.price.push(e);
 			else sorts.price.splice(sorts.price.indexOf(e), 1);
 		}
-		let updateSort = async () => await axios.get("/items", { params: { sorts: JSON.stringify(sorts) } });
-		updateSort();
+		setSort(sorts);
 	};
 	return (
 		<div className="about">
 			<Sort handleChange={handleChange} />
-			<div className="cards">
-				<Card /> {/* Every card will be fetched from the database, with the relevant sort */}
-			</div>
+			<div className="cards">{sortedItems}</div>
+			{sortedItems}
+			{items.map((item) => (
+				<>
+					<div>{item.material}</div>
+					<div>{item.price}</div>
+				</>
+			))}
 		</div>
 	);
 }

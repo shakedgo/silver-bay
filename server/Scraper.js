@@ -20,18 +20,5 @@ const scrape = () => {
 	// 		});
 	// });
 };
-let queryBuilder = (sorts) => {
-	let query = "";
-	if (sorts.material.length > 1) {
-		query += "$or [";
-		sorts.material.forEach((e) => {
-			query += `{material: '${e}'},`;
-		});
-		query += "]";
-	} else if (sorts.material !== []) {
-		query += `{material: '${sorts.material[0]}'}`;
-	}
-	return query;
-};
 
-module.exports = { scrape, queryBuilder };
+module.exports = { scrape };

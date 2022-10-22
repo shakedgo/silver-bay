@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const { scrape, db, queryBuilder } = require("./Scraper");
+const { scrape } = require("./Scraper");
 
 const app = express();
 app.use(express.json());
@@ -13,30 +13,23 @@ app.get("/api", (_req, res) => {
 	res.json({ username: "shakedgo" });
 });
 
-app.get("/items", (req, res) => {
-	let sorts = JSON.parse(req.query.sorts);
-	if (sorts.material !== [] || sorts.price !== []) {
-		const uri = process.env.MONGO;
-		const client = new MongoClient(uri, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			serverApi: ServerApiVersion.v1,
-		});
-		client.connect();
-		const itemsCollection = client.db("silver-bay").collection("Items");
-		let query = queryBuilder(sorts);
-		console.log(query);
-		itemsCollection
-			.find(query)
-			.toArray()
-			.then((ress) => {
-				console.log(ress);
-				client.close();
-			});
-		// res.json(itemsCollection.find({ material: sorts.material, price: sorts.price })); // check if sort is json with the required sorts
-		// client.close();
-	}
-	res.send("done");
+app.get("/items", (_req, res) => {
+	const uri = process.env.MONGO;
+	const client = new MongoClient(uri, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		serverApi: ServerApiVersion.v1,
+	});
+
+	// client.connect();
+	// const itemsCollection = client.db("silver-bay").collection("Items");
+	// res.json(itemsCollection.find({}));
+
+	res.send([
+		{ material: "silver", price: 40 },
+		{ material: "gold", price: 5000 },
+	]);
+	// client.close();
 });
 
 // const clientPath = path.join(process.cwd(), "client/");
