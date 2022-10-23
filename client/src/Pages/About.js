@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Card from "../Components/Card";
+// import Card from "../Components/Card";
 import Sort from "../Components/Sort";
 import "./About.scss";
 
 export default function About() {
-	let sorts = {
-		material: [],
-		price: [],
-	};
+	// let sort = {
+	// 	name: [],
+	// 	material: [],
+	// 	price: [],
+	// };
+	let sorts;
+	// const [sorts, setSorts] = useState({});
 	const [items, setItems] = useState([]);
-	const [sort, setSort] = useState(sorts);
-	let sortedItems = [];
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -21,36 +22,28 @@ export default function About() {
 		fetchData();
 	}, []);
 
-	useEffect(() => {
-		if (sort.material !== [] && sort.price !== []) {
-			items.forEach((item) => {
-				if (sort.material.includes(item.material) && sort.price.includes(item.price)) sortedItems.push(item);
-			});
-		}
-		sortedItems.map((item) => <Card props={item}></Card>);
-	}, [sort]);
-
-	const handleChange = (e, type) => {
-		if (type === "material") {
-			if (!sorts.material.includes(e)) sorts.material.push(e);
-			else sorts.material.splice(sorts.material.indexOf(e), 1);
-		} else if (type === "price") {
-			if (!sorts.price.includes(e)) sorts.price.push(e);
-			else sorts.price.splice(sorts.price.indexOf(e), 1);
-		}
-		setSort(sorts);
+	const handleChange = (e) => {
+		sorts = e;
+		console.log(sorts);
 	};
+
 	return (
 		<div className="about">
-			<Sort handleChange={handleChange} />
-			<div className="cards">{sortedItems}</div>
-			{sortedItems}
-			{items.map((item) => (
-				<>
-					<div>{item.material}</div>
-					<div>{item.price}</div>
-				</>
+			<Sort changeState={handleChange} />
+			{items.map((item, index) => (
+				<div key={"material" + index}>
+					{item.material},{item.price}
+				</div>
 			))}
+			{/* {console.log(sorts)} */}
+
+			{/* <div className="cards">{sortedItems}</div> */}
+			{/* {sorted.map((item, index) => (
+				<>
+					<div key={"material" + index}>{item.material}</div>
+					<div key={"price" + index}>{item.price}</div>
+				</>
+			))} */}
 		</div>
 	);
 }

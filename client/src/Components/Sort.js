@@ -1,6 +1,22 @@
 import React from "react";
 
-export default function Sort({ handleChange }) {
+export default function Sort({ changeState }) {
+	let sorts = {
+		material: [],
+		price: [],
+	};
+	const handleChange = (e, type) => {
+		if (type === "material") {
+			if (!sorts.material.includes(e)) sorts.material.push(e);
+			else sorts.material.splice(sorts.material.indexOf(e), 1);
+		}
+		if (type === "price") {
+			if (!sorts.price.includes(e)) sorts.price.push(e);
+			else sorts.price.splice(sorts.price.indexOf(e), 1);
+		}
+		// console.log(sorts);
+		changeState(sorts);
+	};
 	return (
 		<div className="sort-container">
 			<h4>Metal Type</h4>
