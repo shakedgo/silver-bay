@@ -21,18 +21,13 @@ app.get("/items", (_req, res) => {
 		serverApi: ServerApiVersion.v1,
 	});
 
-	// client.connect();
-	// const itemsCollection = client.db("silver-bay").collection("Items");
-	// res.json(itemsCollection.find());
-	// itemsCollection.insertOne({ name: "silver", material: "Silver", price: 0.11 });
-	// itemsCollection.insertOne({ name: "gold", material: "Gold", price: 0.22 });
-	// res.send("done");
-	// client.close();
-
-	res.send([
-		{ name: "Silver-test", material: "silver", price: 40 },
-		{ name: "Gold-test", material: "gold", price: 5000 },
-	]);
+	let fetchItems = async () => {
+		await client.connect();
+		const itemsCollection = client.db("silver-bay").collection("Items");
+		res.json(await itemsCollection.find().toArray());
+		client.close();
+	};
+	fetchItems();
 });
 
 // const clientPath = path.join(process.cwd(), "client/");
