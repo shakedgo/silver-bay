@@ -14,8 +14,8 @@ export default function Card(props) {
 				height={130}
 				alt="coin"
 			/>
-			<div className="item-name">{props.name}</div>
-			<div className="item-price">{props.price}</div>
+			<div className="item-material">material: {props.item.material}</div>
+			<div className="item-price">price: {props.item.price}</div>
 		</Link>
 	);
 }
