@@ -24,7 +24,7 @@ export default function About() {
 		if (sorts.material.length !== 0 || sorts.price.length !== 0) {
 			if (sorts.material.length > 0 && sorts.price.length > 0) {
 				items.forEach((item) => {
-					if (sorts.material.includes(item.material) && sorts.price.includes(item.price)) bag.push(item);
+					if (sorts.material.includes(item.material) && priceFilter(item.price)) bag.push(item);
 				});
 			} else if (sorts.material.length > 0) {
 				items.forEach((item) => {
@@ -32,7 +32,7 @@ export default function About() {
 				});
 			} else if (sorts.price.length > 0) {
 				items.forEach((item) => {
-					if (sorts.price.includes(item.price)) bag.push(item);
+					if (priceFilter(item.price)) bag.push(item);
 				});
 			}
 		} else {
@@ -40,6 +40,15 @@ export default function About() {
 			setSortedItems(items);
 		}
 		setSortedItems([...bag]);
+
+		function priceFilter(itemPrice) {
+			// this function checks if the item price is in the range of the price sort.
+			let pricesMat = sorts.price.map((sort) => sort.split("to"));
+			let completeArr = pricesMat.reduce((prev, arr) => prev.concat(arr));
+			let [bottom, top] = [completeArr.sort((a, b) => a - b)[0], completeArr.sort((a, b) => a - b).at(-1)];
+			if (itemPrice > bottom && itemPrice < top) return true;
+			return false;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sorts]);
 

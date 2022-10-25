@@ -49,12 +49,12 @@ export default function Sort({ changeState }) {
 			<div>
 				<input
 					type="checkbox"
-					name="under20"
-					id="under20"
-					value="under20"
+					name="0to20"
+					id="0to20"
+					value="0to20"
 					onChange={(e) => changeState(e.target.value, "price")}
 				/>
-				<label htmlFor="under20">Under 20$</label>
+				<label htmlFor="0to20">Under 20$</label>
 			</div>
 			<div>
 				<input
