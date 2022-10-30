@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const { scrape } = require("./Scraper");
+const { scrape } = require("./scraper");
 
 const app = express();
 app.use(express.json());
