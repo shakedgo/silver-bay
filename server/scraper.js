@@ -12,12 +12,16 @@ const scrape = async () => {
 	await page.goto(URL);
 	const resultsSelector = ".item-link";
 	await page.waitForSelector(resultsSelector);
-	let item = new Object();
-	item.title = await page.$eval(".mod-product-title", (element) => element.textContent.trim());
-	item.price = await page.$eval(".mod-product-pricing", (element) => element.textContent.trim());
-	// item.img = await page.$eval(".mod-product-img", (element) => element.textContent.trim().src);
-	items.push({ ...item });
-	console.log(items);
+	let itemsHTML = await page.$$eval(resultsSelector, (element) => element.map((e) => e.innerHTML));
+	itemsHTML.forEach((i) => {
+		let item = new Object();
+		item.title = i.img;
+		// item.title = await i.$eval(".mod-product-title", (element) => element.textContent.trim());
+		// item.price = await i.$eval(".mod-product-pricing", (element) => element.textContent.trim());
+		// item.img = await i.$eval(".mod-product-img>img", (element) => element.src);
+		items.push({ ...item });
+	});
+	console.log(items[0]);
 };
 scrape();
 module.exports = { scrape };
