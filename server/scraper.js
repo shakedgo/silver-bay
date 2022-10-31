@@ -1,27 +1,31 @@
 // const axios = require("axios");
 const puppeteer = require("puppeteer");
-
+const cheerio = require("cheerio");
 const URL = "https://www.apmex.com/category/10010/gold-coins?page=3"; // site we scrape
 
 const scrape = async () => {
 	let items = [];
 
+	//Getting page data from dynamic page, useing puppeteer.
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
-
 	await page.goto(URL);
 	const resultsSelector = ".item-link";
 	await page.waitForSelector(resultsSelector);
-	let itemsHTML = await page.$$eval(resultsSelector, (element) => element.map((e) => e.innerHTML));
-	itemsHTML.forEach((i) => {
+	let pageData = await page.$eval("body", (element) => element.innerHTML);
+
+	//scraping the items data with cheerio for convenience.
+	const $ = cheerio.load(pageData);
+	$(".mod-product-card").each((i, element) => {
 		let item = new Object();
-		item.title = i.img;
-		// item.title = await i.$eval(".mod-product-title", (element) => element.textContent.trim());
-		// item.price = await i.$eval(".mod-product-pricing", (element) => element.textContent.trim());
-		// item.img = await i.$eval(".mod-product-img>img", (element) => element.src);
+		item._id = $(element).find(".item-link").attr("data-product-id");
+		item.title = $(element).find(".mod-product-title").text().trimStart().trimEnd();
+		item.img = $(element).find("img").attr("src");
+		item.price = $(element).find(".mod-product-pricing").text().trimStart().trimEnd();
 		items.push({ ...item });
 	});
-	console.log(items[0]);
+
+	console.log(items);
 };
 scrape();
 module.exports = { scrape };
