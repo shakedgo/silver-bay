@@ -13,6 +13,10 @@ const client = new MongoClient(uri, {
 	serverApi: ServerApiVersion.v1,
 });
 
+// TODO: Set item price as number.
+//		 Add material type.
+//		 If price is "" set it to "price is not shown".
+//		 load page with all images.
 const scrape = async () => {
 	let items = [];
 

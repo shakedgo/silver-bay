@@ -71,7 +71,8 @@ export default function About() {
 			<Sort changeState={handleChange} />
 			<div className="cards">
 				{sortedItems.map((item, index) => {
-					return <Card key={item.name + index} item={item} />;
+					console.log(item);
+					return <Card key={item.title + index} item={item} />;
 				})}
 			</div>
 		</div>
