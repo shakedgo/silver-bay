@@ -23,7 +23,7 @@ app.get("/items", (_req, res) => {
 
 	let fetchItems = async () => {
 		await client.connect();
-		const itemsCollection = client.db("silver-bay").collection("Items");
+		const itemsCollection = client.db("silver-bay").collection("items");
 		res.json(await itemsCollection.find().toArray());
 		client.close();
 	};
