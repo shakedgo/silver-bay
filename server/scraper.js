@@ -1,4 +1,3 @@
-// const axios = require("axios");
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -15,16 +14,15 @@ const client = new MongoClient(uri, {
 
 // TODO: Set item price as number.
 //		 Add material type.
-//		 If price is "" set it to "price is not shown".
-//		 load page with all images.
+//		 If price is "" set it to "price is not specified".
 const scrape = async () => {
 	let items = [];
 
-	//Getting page data from dynamic page, useing puppeteer.
+	//Getting page data from dynamic page, using puppeteer.
 	console.log("Loading page...");
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
-	await page.goto(URL);
+	await page.goto(URL, { waitUntil: "networkidle2", timeout: 0 });
 	const resultsSelector = ".item-link";
 	await page.waitForSelector(resultsSelector);
 	let pageData = await page.$eval("body", (element) => element.innerHTML);
@@ -37,12 +35,13 @@ const scrape = async () => {
 		let item = new Object();
 		item.id = $(element).find(".item-link").attr("data-product-id");
 		item.title = $(element).find(".mod-product-title").text().trimStart().trimEnd();
-		item.img = $(element).find("img").attr("src");
+		item.img = $(element).find("img").attr("data-original");
+		if (item.img === undefined) item.img = $(element).find("img").attr("src"); // Only in the first ten images.
 		item.price = $(element).find(".mod-product-pricing").text().trimStart().trimEnd();
 		items.push({ ...item });
 	});
 	console.log("Scrape done.");
-
+	// Pushing the data to the database.
 	console.log("Refreshing database...");
 	await client.connect();
 	const collection = client.db("silver-bay").collection("items");
