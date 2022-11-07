@@ -70,9 +70,9 @@ export default function About() {
 		<div className="about">
 			<Sort changeState={handleChange} />
 			<div className="cards">
-				{sortedItems.map((item, index) => {
+				{sortedItems.map((item) => {
 					console.log(item);
-					return <Card key={item.title + index} item={item} />;
+					return <Card key={item._id} item={item} />;
 				})}
 			</div>
 		</div>

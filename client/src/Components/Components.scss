@@ -3,7 +3,11 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	padding: 10px;
+	flex-wrap: wrap;
+	margin: 5px;
+	padding: 4px;
+	width: 20%;
+	border: 1px solid red;
 }
 
 .sort-container {

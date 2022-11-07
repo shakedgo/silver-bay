@@ -5,7 +5,6 @@ require("dotenv").config();
 
 const URL = "https://www.apmex.com/category/10010/gold-coins?page=3"; // site we scrape
 const uri = process.env.MONGO;
-// console.log;
 const client = new MongoClient(uri, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -33,32 +32,27 @@ const scrape = async () => {
 	const $ = cheerio.load(pageData);
 	$(".mod-product-card").each((i, element) => {
 		let item = new Object();
-		item.id = $(element).find(".item-link").attr("data-product-id");
-		item.title = $(element).find(".mod-product-title").text().trimStart().trimEnd();
+		item._id = $(element).find(".item-link").attr("data-product-id");
+		item.title = $(element).find(".item-link").attr("title");
 		item.img = $(element).find("img").attr("data-original");
 		if (item.img === undefined) item.img = $(element).find("img").attr("src"); // Only in the first ten images.
-		item.price = $(element).find(".mod-product-pricing").text().trimStart().trimEnd();
+		item.price = $(element).find("span.price").text();
 		items.push({ ...item });
 	});
 	console.log("Scrape done.");
+
 	// Pushing the data to the database.
 	console.log("Refreshing database...");
 	await client.connect();
 	const collection = client.db("silver-bay").collection("items");
-	for (let i = 0; i < items.length; i++) {
-		await collection.updateMany(
-			{ _id: items[i].id },
-			{
-				$set: {
-					_id: items[i].id,
-					title: items[i].title,
-					img: items[i].img,
-					price: items[i].price,
-				},
-			},
-			{ upsert: true }
-		);
-	}
+
+	// getting the ids that are in the database.
+	const idsInDatabase = await collection.distinct("_id", {});
+	// Filtering out the items that are already in the collection.
+	items = items.filter((item) => !idsInDatabase.includes(item._id));
+
+	console.log(items.length + " New items.");
+	if (items.length !== 0) await collection.insertMany(items);
 	console.log("Database updated successfully.");
 	client.close();
 };
