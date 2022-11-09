@@ -3,14 +3,17 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
-// const { scrape } = require("./scraper");
+const { scrape } = require("./scraper");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/api", (_req, res) => {
-	res.json({ username: "shakedgo" });
+app.get("/refresh-data", (_req, res) => {
+	(async () => {
+		await scrape();
+		res.send("done");
+	})();
 });
 
 app.get("/items", (_req, res) => {

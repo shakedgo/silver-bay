@@ -8,14 +8,14 @@ export default function About() {
 	const [sorts, setSorts] = useState({ material: [], price: [] });
 	const [items, setItems] = useState([]);
 	const [sortedItems, setSortedItems] = useState([]);
+	const [btnText, setBtnText] = useState("Refresh Database");
 
 	useEffect(() => {
-		const fetchData = async () => {
+		(async () => {
 			const res = await axios.get("/items");
 			setItems(res.data);
 			setSortedItems(res.data);
-		};
-		fetchData();
+		})();
 	}, []);
 
 	useEffect(() => {
@@ -41,14 +41,14 @@ export default function About() {
 		}
 		setSortedItems([...bag]);
 
-		function priceFilter(itemPrice) {
+		const priceFilter = (itemPrice) => {
 			// this function checks if the item price is in the range of the price sort.
 			let pricesMat = sorts.price.map((sort) => sort.split("to"));
 			let completeArr = pricesMat.reduce((prev, arr) => prev.concat(arr));
 			let [bottom, top] = [completeArr.sort((a, b) => a - b)[0], completeArr.sort((a, b) => a - b).at(-1)];
 			if (itemPrice > bottom && itemPrice < top) return true;
 			return false;
-		}
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sorts]);
 
@@ -65,13 +65,19 @@ export default function About() {
 			setSorts({ ...sorts });
 		}
 	};
+	const refreshData = async () => {
+		setBtnText("Refreshing...");
+		await axios.get("/refresh-data");
+		setSortedItems(items);
+		setBtnText("Refresh Database");
+	};
 
 	return (
 		<div className="about">
 			<Sort changeState={handleChange} />
 			<div className="cards">
+				<button onClick={refreshData}>{btnText}</button>
 				{sortedItems.map((item) => {
-					console.log(item);
 					return <Card key={item._id} item={item} />;
 				})}
 			</div>
