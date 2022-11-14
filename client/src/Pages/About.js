@@ -42,20 +42,20 @@ export default function About() {
 		}
 
 		function priceFilter(itemPrice) {
-			// this function checks if the item price is in the range of the price sort.
-			// FIX: function takes only top and bottom values.
-			//      therefore if the middle value is not checked it will still show it.
+			// this function checks if the item price is in the range of the prices sort.
 			itemPrice = Number(itemPrice.split("$")[1].replace(",", ""));
 			let pricesMat = sorts.price.map((sort) => sort.split("to"));
-			let completeArr = pricesMat.reduce((prev, arr) => prev.concat(arr));
-			let [bottom, top] = [completeArr.sort((a, b) => a - b)[0], completeArr.sort((a, b) => a - b).at(-1)];
-			if (itemPrice > bottom && itemPrice < top) return true;
-			return false;
+			let validPrice = false;
+			pricesMat.forEach((price) => {
+				let [bottom, top] = [price.sort((a, b) => a - b)[0], price.sort((a, b) => a - b).at(-1)];
+				if (itemPrice > bottom && itemPrice < top) validPrice = true;
+			});
+			return validPrice;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sorts]);
 
-	const handleChange = (e, type) => {
+	const sortChange = (e, type) => {
 		// This function update the sorts the user choose
 		if (type === "material") {
 			if (!sorts.material.includes(e)) sorts.material.push(e);
@@ -77,7 +77,7 @@ export default function About() {
 
 	return (
 		<div className="about">
-			<Sort changeState={handleChange} />
+			<Sort changeState={sortChange} />
 			<div className="cards">
 				<button onClick={() => refreshData()}>{btnText}</button>
 				{sortedItems.map((item) => {

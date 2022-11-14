@@ -49,22 +49,22 @@ export default function Sort({ changeState }) {
 			<div>
 				<input
 					type="checkbox"
-					name="0to20"
-					id="0to20"
-					value="0to20"
+					name="0to25"
+					id="0to25"
+					value="0to25"
 					onChange={(e) => changeState(e.target.value, "price")}
 				/>
-				<label htmlFor="0to20">Under 20$</label>
+				<label htmlFor="0to25">Under 25$</label>
 			</div>
 			<div>
 				<input
 					type="checkbox"
-					name="25to90"
-					id="25to90"
-					value="25to90"
+					name="25to99"
+					id="25to99"
+					value="25to99"
 					onChange={(e) => changeState(e.target.value, "price")}
 				/>
-				<label htmlFor="25to90">25$ to 90$</label>
+				<label htmlFor="25to99">25$ to 99$</label>
 			</div>
 			<div>
 				<input
