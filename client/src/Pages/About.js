@@ -1,89 +1,89 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../Components/Card";
-import Sort from "../Components/Sort";
+import Filter from "../Components/Filter";
 import "./About.scss";
 
 export default function About() {
-	const [sorts, setSorts] = useState({ material: [], price: [] });
+	const [filters, setFilters] = useState({ material: [], price: [] });
 	const [items, setItems] = useState([]);
-	const [sortedItems, setSortedItems] = useState([]);
+	const [filteredItems, setFilteredItems] = useState([]);
 	const [btnText, setBtnText] = useState("Refresh Database");
 
 	useEffect(() => {
 		(async () => {
 			const res = await axios.get("/items");
 			setItems(res.data);
-			setSortedItems(res.data);
+			setFilteredItems(res.data);
 		})();
 	}, []);
 
 	useEffect(() => {
-		// this useEffect will rerender the items that is relevant according to the sort
+		// this useEffect will rerender the items that is relevant according to the filter
 		let bag = [];
-		if (sorts.material.length !== 0 || sorts.price.length !== 0) {
-			if (sorts.material.length > 0 && sorts.price.length > 0) {
+		if (filters.material.length !== 0 || filters.price.length !== 0) {
+			if (filters.material.length > 0 && filters.price.length > 0) {
 				items.forEach((item) => {
-					if (sorts.material.includes(item.material) && priceFilter(item.price)) bag.push(item);
+					if (filters.material.includes(item.material) && priceFilter(item.price)) bag.push(item);
 				});
-			} else if (sorts.material.length > 0) {
+			} else if (filters.material.length > 0) {
 				items.forEach((item) => {
-					if (sorts.material.includes(item.material)) bag.push(item);
+					if (filters.material.includes(item.material)) bag.push(item);
 				});
-			} else if (sorts.price.length > 0) {
+			} else if (filters.price.length > 0) {
 				items.forEach((item) => {
 					if (priceFilter(item.price)) bag.push(item);
 				});
 			}
-			setSortedItems([...bag]);
+			setFilteredItems([...bag]);
 		} else {
-			console.log("no sorts");
-			setSortedItems(items);
+			console.log("no filters");
+			setFilteredItems(items);
 		}
 
 		function priceFilter(itemPrice) {
-			// this function checks if the item price is in the range of the prices sort.
+			// this function checks if the item price is in the range of the prices filter.
 			itemPrice = Number(itemPrice.split("$")[1].replace(",", ""));
-			let pricesMat = sorts.price.map((sort) => sort.split("to"));
+			let pricesMat = filters.price.map((filter) => filter.split("to"));
 			let validPrice = false;
 			pricesMat.forEach((price) => {
-				let [bottom, top] = [price.sort((a, b) => a - b)[0], price.sort((a, b) => a - b).at(-1)];
+				let [bottom, top] = [price.filter((a, b) => a - b)[0], price.filter((a, b) => a - b).at(-1)];
 				if (itemPrice > bottom && itemPrice < top) validPrice = true;
 			});
 			return validPrice;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sorts]);
+	}, [filters]);
 
-	const sortChange = (e, type) => {
-		// This function update the sorts the user choose
+	const filterChange = (e, type) => {
+		// This function update the filters the user choose
 		if (type === "material") {
-			if (!sorts.material.includes(e)) sorts.material.push(e);
-			else sorts.material.splice(sorts.material.indexOf(e), 1);
-			setSorts({ ...sorts });
+			if (!filters.material.includes(e)) filters.material.push(e);
+			else filters.material.splice(filters.material.indexOf(e), 1);
+			setFilters({ ...filters });
 		}
 		if (type === "price") {
-			if (!sorts.price.includes(e)) sorts.price.push(e);
-			else sorts.price.splice(sorts.price.indexOf(e), 1);
-			setSorts({ ...sorts });
+			if (!filters.price.includes(e)) filters.price.push(e);
+			else filters.price.splice(filters.price.indexOf(e), 1);
+			setFilters({ ...filters });
 		}
 	};
 	const refreshData = async () => {
 		setBtnText("Refreshing...");
 		await axios.get("/refresh-data");
-		setSortedItems(items);
+		setFilteredItems(items);
 		setBtnText("Refresh Database");
 	};
 
 	return (
 		<div className="about">
-			<Sort changeState={sortChange} />
+			<Filter changeState={filterChange} />
 			<div className="cards">
 				<button onClick={() => refreshData()}>{btnText}</button>
 				{items.length === 0 ? (
 					<p>loading data</p>
 				) : (
-					sortedItems.map((item) => {
+					filteredItems.map((item) => {
 						return <Card key={item._id} item={item} />;
 					})
 				)}

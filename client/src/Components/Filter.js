@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function Sort({ changeState }) {
+export default function Filter({ changeState }) {
 	return (
-		<div className="sort-container">
+		<div className="filter-container">
 			<h4>Metal Type</h4>
 			<div>
 				<input
