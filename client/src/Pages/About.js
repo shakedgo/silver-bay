@@ -80,9 +80,13 @@ export default function About() {
 			<Sort changeState={sortChange} />
 			<div className="cards">
 				<button onClick={() => refreshData()}>{btnText}</button>
-				{sortedItems.map((item) => {
-					return <Card key={item._id} item={item} />;
-				})}
+				{items.length === 0 ? (
+					<p>loading data</p>
+				) : (
+					sortedItems.map((item) => {
+						return <Card key={item._id} item={item} />;
+					})
+				)}
 			</div>
 		</div>
 	);
