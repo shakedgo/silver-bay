@@ -9,7 +9,7 @@ export default function Sort({ changeState }) {
 					type="checkbox"
 					name="gold"
 					id="gold"
-					value="gold"
+					value="Gold"
 					onChange={(e) => changeState(e.target.value, "material")}
 				/>
 				<label htmlFor="gold">Gold</label>
@@ -19,7 +19,7 @@ export default function Sort({ changeState }) {
 					type="checkbox"
 					name="silver"
 					id="silver"
-					value="silver"
+					value="Silver"
 					onChange={(e) => changeState(e.target.value, "material")}
 				/>
 				<label htmlFor="silver">Silver</label>
@@ -29,7 +29,7 @@ export default function Sort({ changeState }) {
 					type="checkbox"
 					name="plat"
 					id="plat"
-					value="plat"
+					value="Plat"
 					onChange={(e) => changeState(e.target.value, "material")}
 				/>
 				<label htmlFor="plat">Platinum</label>
@@ -39,7 +39,7 @@ export default function Sort({ changeState }) {
 					type="checkbox"
 					name="pallad"
 					id="pallad"
-					value="pallad"
+					value="Pallad"
 					onChange={(e) => changeState(e.target.value, "material")}
 				/>
 				<label htmlFor="pallad">Palladium</label>

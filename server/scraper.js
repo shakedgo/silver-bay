@@ -34,7 +34,7 @@ const scrape = async () => {
 		let item = {
 			_id: $(element).find(".item-link").attr("data-product-id"),
 			title: $(element).find(".item-link").attr("title"),
-			material: $(element).find(".item-link").attr("data-eventaction").split("|")[1],
+			material: $(element).find(".item-link").attr("data-eventaction").split(/[| ]+/)[1],
 			img: $(element).find("img").attr("data-original"),
 			price: $(element).find("span.price").text(),
 		};
