@@ -31,12 +31,13 @@ const scrape = async () => {
 	console.log("Starting scrape...");
 	const $ = cheerio.load(pageData);
 	$(".mod-product-card").each((i, element) => {
-		let item = new Object();
-		item._id = $(element).find(".item-link").attr("data-product-id");
-		item.title = $(element).find(".item-link").attr("title");
-		item.img = $(element).find("img").attr("data-original");
+		let item = {
+			_id: $(element).find(".item-link").attr("data-product-id"),
+			title: $(element).find(".item-link").attr("title"),
+			img: $(element).find("img").attr("data-original"),
+			price: $(element).find("span.price").text(),
+		};
 		if (item.img === undefined) item.img = $(element).find("img").attr("src"); // Only in the first ten images.
-		item.price = $(element).find("span.price").text();
 		items.push({ ...item });
 	});
 	console.log("Scrape done.");
