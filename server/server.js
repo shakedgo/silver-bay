@@ -16,6 +16,20 @@ const client = new MongoClient(uri, {
 	useUnifiedTopology: true,
 	serverApi: ServerApiVersion.v1,
 });
+const itemsCollection = client.db("silver-bay").collection("items");
+
+let firstItem;
+let objectData;
+let objectCounter;
+(async () => {
+	await client.connect();
+	firstItem = await itemsCollection.findOne();
+	client.close();
+	// Saving the data,machineid, processid from ObjectId
+	objectData = firstItem._id.toString().slice(0, 18);
+	// Saving and parsing the counter of ObjectId
+	objectCounter = parseInt(firstItem._id.toString().slice(18), 16);
+})();
 
 app.get("/refresh-data", (_req, res) => {
 	(async () => {
@@ -28,11 +42,6 @@ app.get("/items", (req, res) => {
 	(async () => {
 		let pageNum = req.query.page;
 		await client.connect();
-		const itemsCollection = client.db("silver-bay").collection("items");
-		let first = await itemsCollection.findOne();
-		let objectData = first._id.toString().slice(0, 18);
-		// Saving the data,machineid, processid from ObjectId
-		let objectCounter = parseInt(first._id.toString().slice(18), 16); // Saving and parsing the counter of ObjectId
 		res.json(
 			// Searching for 5 items that are relevant to the page.
 			// Adding ObjectData to the Counter with our page number.
