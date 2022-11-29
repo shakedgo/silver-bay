@@ -5,6 +5,7 @@ import Filter from "../Components/Filter";
 import "./About.scss";
 
 export default function About() {
+	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({ material: [], price: [] });
 	const [items, setItems] = useState([]);
 	const [filteredItems, setFilteredItems] = useState([]);
@@ -12,11 +13,12 @@ export default function About() {
 
 	useEffect(() => {
 		(async () => {
-			const res = await axios.get("/items");
+			const res = await axios.get("/items", { params: { page } });
+			// const res = await axios.get("/items");
 			setItems(res.data);
 			setFilteredItems(res.data);
 		})();
-	}, []);
+	}, [page]);
 
 	useEffect(() => {
 		// this useEffect will rerender the items that is relevant according to the filter
@@ -87,6 +89,9 @@ export default function About() {
 						return <Card key={item._id} item={item} />;
 					})
 				)}
+				<button onClick={() => setPage(0)}>1</button>
+				<button onClick={() => setPage(1)}>2</button>
+				<button onClick={() => setPage(2)}>3</button>
 			</div>
 		</div>
 	);

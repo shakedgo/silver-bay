@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const { scrape } = require("./scraper");
+// const { scrape } = require("./scraper");
 
 const app = express();
 app.use(express.json());
@@ -23,11 +23,17 @@ app.get("/refresh-data", (_req, res) => {
 	})();
 });
 
-app.get("/items", (_req, res) => {
+app.get("/items", (req, res) => {
 	(async () => {
 		await client.connect();
 		const itemsCollection = client.db("silver-bay").collection("items");
-		res.json(await itemsCollection.find().toArray());
+		res.json(
+			await itemsCollection
+				.find()
+				.skip(req.query.page * 5)
+				.limit(5)
+				.toArray()
+		);
 		client.close();
 	})();
 });
