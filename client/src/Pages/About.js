@@ -86,7 +86,7 @@ export default function About() {
 					<p>loading data</p>
 				) : (
 					filteredItems.map((item) => {
-						return <Card key={item._id} item={item} />;
+						return <Card key={item.id} item={item} />;
 					})
 				)}
 				<button onClick={() => setPage(0)}>1</button>

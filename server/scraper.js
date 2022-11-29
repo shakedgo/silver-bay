@@ -32,7 +32,7 @@ const scrape = async () => {
 	const $ = cheerio.load(pageData);
 	$(".mod-product-card").each((i, element) => {
 		let item = {
-			_id: $(element).find(".item-link").attr("data-product-id"),
+			id: $(element).find(".item-link").attr("data-product-id"),
 			title: $(element).find(".item-link").attr("title"),
 			material: $(element).find(".item-link").attr("data-eventaction").split(/[| ]+/)[1],
 			img: $(element).find("img").attr("data-original"),
@@ -49,9 +49,9 @@ const scrape = async () => {
 	const collection = client.db("silver-bay").collection("items");
 
 	// getting the ids that are in the database.
-	const idsInDatabase = await collection.distinct("_id", {});
+	const idsInDatabase = await collection.distinct("id", {});
 	// Filtering out the items that are already in the collection.
-	items = items.filter((item) => !idsInDatabase.includes(item._id));
+	items = items.filter((item) => !idsInDatabase.includes(item.id));
 
 	console.log(items.length + " New items.");
 	if (items.length !== 0) await collection.insertMany(items);

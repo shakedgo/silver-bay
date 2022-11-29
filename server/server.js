@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 // const { scrape } = require("./scraper");
 
 const app = express();
@@ -27,10 +27,16 @@ app.get("/items", (req, res) => {
 	(async () => {
 		await client.connect();
 		const itemsCollection = client.db("silver-bay").collection("items");
+		let first = await itemsCollection.findOne();
+		let objectData = first._id.toString().slice(0, 18);
+		let objectCounter = first._id.toString().slice(18);
 		res.json(
 			await itemsCollection
-				.find()
-				.skip(req.query.page * 5)
+				.find({
+					_id: {
+						$gt: ObjectId(objectData + (parseInt(objectCounter, 16) + req.query.page * 5 - 1).toString(16)),
+					},
+				})
 				.limit(5)
 				.toArray()
 		);
