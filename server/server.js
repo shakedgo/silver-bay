@@ -29,8 +29,11 @@ app.get("/items", (req, res) => {
 		const itemsCollection = client.db("silver-bay").collection("items");
 		let first = await itemsCollection.findOne();
 		let objectData = first._id.toString().slice(0, 18);
-		let objectCounter = first._id.toString().slice(18);
+		// Saving the data,machineid, processid from ObjectId
+		let objectCounter = first._id.toString().slice(18); // Saving the counter of ObjectId
 		res.json(
+			// Searching for 5 items that are relevant to the page.
+			// Adding ObjectData to the Counter with our page number.
 			await itemsCollection
 				.find({
 					_id: {
