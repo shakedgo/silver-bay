@@ -6,4 +6,10 @@
 		flex-wrap: wrap;
 		justify-content: center;
 	}
+	.right-container {
+		display: flex;
+		flex-direction: column;
+		// justify-content: center;
+		align-items: center;
+	}
 }

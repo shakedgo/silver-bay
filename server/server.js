@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const ITEMSINPAGE = 10;
+const ITEMSINPAGE = 5;
 
 const uri = process.env.MONGO;
 const client = new MongoClient(uri, {

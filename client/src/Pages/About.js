@@ -13,8 +13,8 @@ export default function About() {
 
 	useEffect(() => {
 		(async () => {
+			setItems([]);
 			const res = await axios.get("/items", { params: { page } });
-			// const res = await axios.get("/items");
 			setItems(res.data);
 			setFilteredItems(res.data);
 		})();
@@ -80,18 +80,24 @@ export default function About() {
 	return (
 		<div className="about">
 			<Filter changeState={filterChange} />
-			<div className="cards">
-				<button onClick={() => refreshData()}>{btnText}</button>
-				{items.length === 0 ? (
-					<p>loading data</p>
-				) : (
-					filteredItems.map((item) => {
-						return <Card key={item.id} item={item} />;
-					})
-				)}
-				<button onClick={() => setPage(0)}>1</button>
-				<button onClick={() => setPage(1)}>2</button>
-				<button onClick={() => setPage(2)}>3</button>
+			<div className="right-container">
+				<div className="cards">
+					{items.length === 0 ? (
+						<p>loading data</p>
+					) : (
+						filteredItems.map((item) => {
+							return <Card key={item.id} item={item} />;
+						})
+					)}
+				</div>
+				<button className="refresh" onClick={() => refreshData()}>
+					{btnText}
+				</button>
+				<div className="pages">
+					<button onClick={() => setPage(0)}>1</button>
+					<button onClick={() => setPage(1)}>2</button>
+					<button onClick={() => setPage(2)}>3</button>
+				</div>
 			</div>
 		</div>
 	);

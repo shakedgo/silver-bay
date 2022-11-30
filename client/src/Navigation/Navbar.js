@@ -4,7 +4,7 @@ import "./Navbar.scss";
 
 export default function Navbar() {
 	return (
-		<div className="container">
+		<div className="navbar-container">
 			<Link to={"/best"}>Best Seller</Link>
 			<Link to={"/gold"}>Gold</Link>
 			<Link to={"/silver"}>Silver</Link>
