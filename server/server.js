@@ -37,7 +37,7 @@ app.get("/refresh-data", (_req, res) => {
 		res.send("done");
 	})();
 });
-
+// TODO: add filter parameters to query db.
 app.get("/items", (req, res) => {
 	(async () => {
 		let pageNum = req.query.page;

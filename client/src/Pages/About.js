@@ -20,6 +20,7 @@ export default function About() {
 		})();
 	}, [page]);
 
+	// TODO: Replace with sending server the filters.
 	useEffect(() => {
 		// this useEffect will rerender the items that is relevant according to the filter
 		let bag = [];
