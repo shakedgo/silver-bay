@@ -36,7 +36,7 @@ const scrape = async () => {
 			title: $(element).find(".item-link").attr("title"),
 			material: $(element).find(".item-link").attr("data-eventaction").split(/[| ]+/)[1],
 			img: $(element).find("img").attr("data-original"),
-			price: $(element).find("span.price").text(),
+			price: parseInt($(element).find("span.price").text().split("$")[1].replace(",", "")),
 		};
 		if (item.img === undefined) item.img = $(element).find("img").attr("src"); // Only in the first ten images.
 		items.push({ ...item });

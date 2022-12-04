@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-const { scrape } = require("./scraper"); // Add lazy loading
+// const { scrape } = require("./scraper"); // Add lazy loading
 
 const app = express();
 app.use(express.json());
@@ -37,23 +37,42 @@ app.get("/refresh-data", (_req, res) => {
 		res.send("done");
 	})();
 });
-// TODO: add filter parameters to query db.
+
 app.get("/items", (req, res) => {
+	let pageNum = req.query.page;
+	let filter = { low: Number(req.query.low), high: Number(req.query.high) };
+	console.log(filter);
 	(async () => {
-		let pageNum = req.query.page;
 		await client.connect();
-		res.json(
-			// Searching for 5 items that are relevant to the page.
-			// Adding ObjectData to the Counter with our page number.
-			await itemsCollection
-				.find({
-					_id: {
-						$gt: ObjectId(objectData + (objectCounter + pageNum * ITEMSINPAGE - 1).toString(16)),
-					},
-				})
-				.limit(ITEMSINPAGE)
-				.toArray()
-		);
+		if (filter.low !== undefined && filter.high !== undefined) {
+			console.log("in");
+			res.json(
+				await itemsCollection
+					.find({
+						// TODO: Implement searching by ObjectId if possible.
+						// _id: {
+						// 	$gt: ObjectId(objectData + (objectCounter + pageNum * ITEMSINPAGE - 1).toString(16)),
+						// },
+						price: { $lt: filter.high, $gt: filter.low },
+					})
+					.skip(ITEMSINPAGE * pageNum) // Skip not good in large scales.
+					.limit(ITEMSINPAGE)
+					.toArray()
+			);
+		} else {
+			res.json(
+				// Searching for 5 items that are relevant to the page.
+				// Adding ObjectData to the Counter with our page number.
+				await itemsCollection
+					.find({
+						_id: {
+							$gt: ObjectId(objectData + (objectCounter + pageNum * ITEMSINPAGE - 1).toString(16)),
+						},
+					})
+					.limit(ITEMSINPAGE)
+					.toArray()
+			);
+		}
 		client.close();
 	})();
 });
