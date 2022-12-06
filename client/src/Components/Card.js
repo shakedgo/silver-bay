@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Components.scss";
 
-// Replace all to get data from parent (About).
 export default function Card(props) {
 	return (
 		<Link to={"/silver123"} id={props.item.id} className="card-container">
@@ -10,7 +9,7 @@ export default function Card(props) {
 			{/* <i className="add-to-cart-button"></i> */}
 			<img src={props.item.img} width={130} height={130} alt="coin" />
 			<div className="item-title">{props.item.title}</div>
-			<div className="item-price">{props.item.price}</div>
+			<div className="item-price">{props.item.price}$</div>
 		</Link>
 	);
 }

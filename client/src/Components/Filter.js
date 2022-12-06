@@ -49,29 +49,17 @@ export default function Filter({ changeState }) {
 			<div>
 				<input
 					type="checkbox"
-					name="0to25"
-					id="0to25"
-					value="0to25"
-					onChange={(e) => changeState({ low: 0, high: 25 }, "price")}
+					name="0to99"
+					id="0to99"
+					onChange={(e) => changeState({ low: 0, high: 99 }, "price")}
 				/>
-				<label htmlFor="0to25">Under 25$</label>
-			</div>
-			<div>
-				<input
-					type="checkbox"
-					name="25to99"
-					id="25to99"
-					value="25to99"
-					onChange={(e) => changeState({ low: 25, high: 99 }, "price")}
-				/>
-				<label htmlFor="25to99">25$ to 99$</label>
+				<label htmlFor="0to99">Under 99$</label>
 			</div>
 			<div>
 				<input
 					type="checkbox"
 					name="100to499"
 					id="100to499"
-					value="100to499"
 					onChange={(e) => changeState({ low: 100, high: 499 }, "price")}
 				/>
 				<label htmlFor="100to499">100$ to 499$</label>
@@ -81,10 +69,27 @@ export default function Filter({ changeState }) {
 					type="checkbox"
 					name="500to999"
 					id="500to999"
-					value="500to999"
 					onChange={(e) => changeState({ low: 500, high: 999 }, "price")}
 				/>
 				<label htmlFor="500to999">500$ to 999$</label>
+			</div>
+			<div>
+				<input
+					type="checkbox"
+					name="1000to1499"
+					id="1000to1499"
+					onChange={(e) => changeState({ low: 1000, high: 1499 }, "price")}
+				/>
+				<label htmlFor="1000to1499">1000$ to 1499$</label>
+			</div>
+			<div>
+				<input
+					type="checkbox"
+					name="1500to2500"
+					id="1500to2500"
+					onChange={(e) => changeState({ low: 1500, high: 2500 }, "price")}
+				/>
+				<label htmlFor="1500to2500">1500$ to 2500$</label>
 			</div>
 		</div>
 	);

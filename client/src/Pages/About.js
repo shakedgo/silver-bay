@@ -12,7 +12,8 @@ export default function About() {
 
 	useEffect(() => {
 		(async () => {
-			const res = await axios.get("/items", { params: { page, prices: filters.prices } });
+			console.log(filters.prices);
+			const res = await axios.get("/items", { params: { page, prices: JSON.stringify(filters.prices) } });
 			setItems(res.data);
 		})();
 	}, [page, filters]);
@@ -24,11 +25,10 @@ export default function About() {
 		if (type === "material") {
 		}
 		if (type === "price") {
-			if (!filters.prices.includes(e)) filters.prices.push(e);
+			if (!JSON.stringify(filters.prices).includes(JSON.stringify(e))) filters.prices.push(e);
 			else filters.prices.splice(filters.prices.indexOf(e), 1);
 			setFilters({ ...filters });
 		}
-		console.log(JSON.stringify(filters));
 	};
 	const refreshData = async () => {
 		setBtnText("Refreshing...");

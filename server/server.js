@@ -37,14 +37,13 @@ app.get("/refresh-data", (_req, res) => {
 		res.send("done");
 	})();
 });
-// localhost:4000/items?page=0&prices=[{"low":0,"high":200},{"low":1500, "high": 2000}]
+
 app.get("/items", (req, res) => {
-	// [{"low": NUM,"high": NUM},{"low": NUM,"high": NUM}];
+	// prices=[{"low": NUM,"high": NUM},{"low": NUM,"high": NUM}]
 	let filters;
-	console.log(filters);
-	if (req.query.prices !== undefined) {
+	let payload = JSON.parse(req.query.prices);
+	if (payload.length !== 0) {
 		// Creating a special query.
-		let payload = JSON.parse(req.query.prices);
 		let priceFilters = [];
 		payload.forEach((obj) => {
 			priceFilters.push({
