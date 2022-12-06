@@ -6,87 +6,33 @@ import "./About.scss";
 
 export default function About() {
 	const [page, setPage] = useState(0);
-	const [price] = useState({ low: [], high: [] });
-	// const [filters, setFilters] = useState({ material: [], price: [] });
+	const [filters, setFilters] = useState({ prices: [] });
 	const [items, setItems] = useState([]);
-	// const [filteredItems, setFilteredItems] = useState([]);
 	const [btnText, setBtnText] = useState("Refresh Database");
 
 	useEffect(() => {
 		(async () => {
-			// setItems([]);
-			const res = await axios.get("/items", { params: { page, low: price.low, high: price.high } });
+			const res = await axios.get("/items", { params: { page, prices: filters.prices } });
 			setItems(res.data);
-			// setFilteredItems(res.data);
 		})();
-	}, [page, price]);
-
-	// // TODO: Replace with sending server the filters.
-	// useEffect(() => {
-	// 	// this useEffect will rerender the items that is relevant according to the filter
-	// 	let bag = [];
-	// 	if (filters.material.length !== 0 || filters.price.length !== 0) {
-	// 		if (filters.material.length > 0 && filters.price.length > 0) {
-	// 			items.forEach((item) => {
-	// 				if (filters.material.includes(item.material) && priceFilter(item.price)) bag.push(item);
-	// 			});
-	// 		} else if (filters.material.length > 0) {
-	// 			items.forEach((item) => {
-	// 				if (filters.material.includes(item.material)) bag.push(item);
-	// 			});
-	// 		} else if (filters.price.length > 0) {
-	// 			items.forEach((item) => {
-	// 				if (priceFilter(item.price)) bag.push(item);
-	// 			});
-	// 		}
-	// 		setFilteredItems([...bag]);
-	// 	} else {
-	// 		console.log("no filters");
-	// 		setFilteredItems(items);
-	// 	}
-
-	// 	function priceFilter(itemPrice) {
-	// 		// this function checks if the item price is in the range of the prices filter.
-	// 		itemPrice = Number(itemPrice.split("$")[1].replace(",", ""));
-	// 		let pricesMat = filters.price.map((filter) => filter.split("to"));
-	// 		let validPrice = false;
-	// 		pricesMat.forEach((price) => {
-	// 			let [bottom, top] = [price.filter((a, b) => a - b)[0], price.filter((a, b) => a - b).at(-1)];
-	// 			if (itemPrice > bottom && itemPrice < top) validPrice = true;
-	// 		});
-	// 		return validPrice;
-	// 	}
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [filters]);
+	}, [page, filters]);
 
 	const filterChange = (e, type) => {
 		// This function update the filters the user choose
 
-		// if (type === "material") {
-		// 	if (!filters.material.includes(e)) filters.material.push(e);
-		// 	else filters.material.splice(filters.material.indexOf(e), 1);
-		// 	setFilters({ ...filters });
-		// }
-		// if (type === "price") {
-		// 	if (!filters.price.includes(e)) filters.price.push(e);
-		// 	else filters.price.splice(filters.price.indexOf(e), 1);
-		// 	setFilters({ ...filters });
-		// }
+		//TODO: Implement material.
 		if (type === "material") {
-			// if (!filters.material.includes(e)) filters.material.push(e);
-			// else filters.material.splice(filters.material.indexOf(e), 1);
-			// setFilters({ ...filters });
 		}
 		if (type === "price") {
-			// if (!pricelow.includes(e)) filters.price.push(e);
-			// else filters.price.splice(filters.price.indexOf(e), 1);
-			// setFilters({ ...filters });
+			if (!filters.prices.includes(e)) filters.prices.push(e);
+			else filters.prices.splice(filters.prices.indexOf(e), 1);
+			setFilters({ ...filters });
 		}
+		console.log(JSON.stringify(filters));
 	};
 	const refreshData = async () => {
 		setBtnText("Refreshing...");
 		await axios.get("/refresh-data");
-		// setFilteredItems(items);
 		setBtnText("Refresh Database");
 	};
 
@@ -98,9 +44,6 @@ export default function About() {
 					{items.length === 0 ? (
 						<p>loading data</p>
 					) : (
-						// filteredItems.map((item) => {
-						// 	return <Card key={item.id} item={item} />;
-						// })
 						items.map((item) => {
 							return <Card key={item.id} item={item} />;
 						})

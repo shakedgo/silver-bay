@@ -52,7 +52,7 @@ export default function Filter({ changeState }) {
 					name="0to25"
 					id="0to25"
 					value="0to25"
-					onChange={(e) => changeState(e.target.value, "price")}
+					onChange={(e) => changeState({ low: 0, high: 25 }, "price")}
 				/>
 				<label htmlFor="0to25">Under 25$</label>
 			</div>
@@ -62,7 +62,7 @@ export default function Filter({ changeState }) {
 					name="25to99"
 					id="25to99"
 					value="25to99"
-					onChange={(e) => changeState(e.target.value, "price")}
+					onChange={(e) => changeState({ low: 25, high: 99 }, "price")}
 				/>
 				<label htmlFor="25to99">25$ to 99$</label>
 			</div>
@@ -72,7 +72,7 @@ export default function Filter({ changeState }) {
 					name="100to499"
 					id="100to499"
 					value="100to499"
-					onChange={(e) => changeState(e.target.value, "price")}
+					onChange={(e) => changeState({ low: 100, high: 499 }, "price")}
 				/>
 				<label htmlFor="100to499">100$ to 499$</label>
 			</div>
@@ -82,7 +82,7 @@ export default function Filter({ changeState }) {
 					name="500to999"
 					id="500to999"
 					value="500to999"
-					onChange={(e) => changeState(e.target.value, "price")}
+					onChange={(e) => changeState({ low: 500, high: 999 }, "price")}
 				/>
 				<label htmlFor="500to999">500$ to 999$</label>
 			</div>

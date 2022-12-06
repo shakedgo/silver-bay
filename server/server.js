@@ -37,10 +37,11 @@ app.get("/refresh-data", (_req, res) => {
 		res.send("done");
 	})();
 });
-
+// localhost:4000/items?page=0&prices=[{"low":0,"high":200},{"low":1500, "high": 2000}]
 app.get("/items", (req, res) => {
 	// [{"low": NUM,"high": NUM},{"low": NUM,"high": NUM}];
 	let filters;
+	console.log(filters);
 	if (req.query.prices !== undefined) {
 		// Creating a special query.
 		let payload = JSON.parse(req.query.prices);
@@ -60,7 +61,6 @@ app.get("/items", (req, res) => {
 	(async () => {
 		await client.connect();
 		if (filters !== undefined) {
-			console.log("in");
 			res.json(
 				await itemsCollection
 					.find(filters)
