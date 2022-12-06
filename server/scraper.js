@@ -11,9 +11,7 @@ const client = new MongoClient(uri, {
 	serverApi: ServerApiVersion.v1,
 });
 
-// TODO: Set item price as number.
-//		 Add material type.
-//		 If price is "" set it to "price is not specified".
+// TODO: If price is "" set it to "price is not specified".
 const scrape = async () => {
 	let items = [];
 

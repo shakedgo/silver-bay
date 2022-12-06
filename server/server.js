@@ -40,8 +40,9 @@ app.get("/refresh-data", (_req, res) => {
 
 app.get("/items", (req, res) => {
 	// prices=[{"low": NUM,"high": NUM},{"low": NUM,"high": NUM}]
-	let filters;
+	let pageNum = req.query.page;
 	let payload = JSON.parse(req.query.prices);
+	let filters;
 	if (payload.length !== 0) {
 		// Creating a special query.
 		let priceFilters = [];
@@ -49,27 +50,27 @@ app.get("/items", (req, res) => {
 			priceFilters.push({
 				price: {
 					$gte: obj.low,
-
 					$lte: obj.high,
 				},
 			});
 		});
 		filters = { $or: priceFilters };
 	}
-	let pageNum = req.query.page;
+
 	(async () => {
 		await client.connect();
 		if (filters !== undefined) {
 			res.json(
 				await itemsCollection
 					.find(filters)
-					.skip(ITEMSINPAGE * pageNum) // Skip not good in large scales.
+					// TODO: replace skip - not good in large scales.
+					.skip(ITEMSINPAGE * pageNum)
 					.limit(ITEMSINPAGE)
 					.toArray()
 			);
 		} else {
 			res.json(
-				// Searching for 5 items that are relevant to the page.
+				// Getting the specific items that are relevant to the page.
 				// Adding ObjectData to the Counter with our page number.
 				await itemsCollection
 					.find({

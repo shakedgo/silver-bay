@@ -12,15 +12,14 @@ export default function About() {
 
 	useEffect(() => {
 		(async () => {
-			console.log(filters.prices);
+			// TODO: Use react query to cache results
 			const res = await axios.get("/items", { params: { page, prices: JSON.stringify(filters.prices) } });
 			setItems(res.data);
 		})();
 	}, [page, filters]);
 
 	const filterChange = (e, type) => {
-		// This function update the filters the user choose
-
+		// This function updates the filters the user choose
 		//TODO: Implement material.
 		if (type === "material") {
 		}
@@ -28,6 +27,7 @@ export default function About() {
 			if (!JSON.stringify(filters.prices).includes(JSON.stringify(e))) filters.prices.push(e);
 			else filters.prices.splice(filters.prices.indexOf(e), 1);
 			setFilters({ ...filters });
+			setItems([]);
 		}
 	};
 	const refreshData = async () => {
