@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import Card from "../Components/Card";
 import Filter from "../Components/Filter";
 import "./About.scss";
@@ -22,6 +22,8 @@ export default function About() {
 		//TODO: Implement material.
 		if (type === "material") {
 		}
+		//TODO: fix react query confusing querys.
+		// 100-499 + 500-999 -100-499 failed
 		if (type === "price") {
 			if (!JSON.stringify(filters.prices).includes(JSON.stringify(e))) filters.prices.push(e);
 			else filters.prices.splice(filters.prices.indexOf(e), 1);
