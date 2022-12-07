@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
+import { QueryClient, useQuery } from "react-query";
 import Card from "../Components/Card";
 import Filter from "../Components/Filter";
 import "./About.scss";
 
 export default function About() {
+	const fetch = async () => {
+		const res = await axios.get("/items", { params: { page, prices: JSON.stringify(filters.prices) } });
+		return res.data;
+	};
+
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({ prices: [] });
-	const [items, setItems] = useState([]);
+	// const [items, setItems] = useState([]);
+	const { data: items, status } = useQuery(["items", page, filters], fetch);
 	const [btnText, setBtnText] = useState("Refresh Database");
-
-	useEffect(() => {
-		(async () => {
-			// TODO: Use react query to cache results
-			const res = await axios.get("/items", { params: { page, prices: JSON.stringify(filters.prices) } });
-			setItems(res.data);
-		})();
-	}, [page, filters]);
 
 	const filterChange = (e, type) => {
 		// This function updates the filters the user choose
@@ -27,9 +26,9 @@ export default function About() {
 			if (!JSON.stringify(filters.prices).includes(JSON.stringify(e))) filters.prices.push(e);
 			else filters.prices.splice(filters.prices.indexOf(e), 1);
 			setFilters({ ...filters });
-			setItems([]);
 		}
 	};
+
 	const refreshData = async () => {
 		setBtnText("Refreshing...");
 		await axios.get("/refresh-data");
@@ -41,8 +40,8 @@ export default function About() {
 			<Filter changeState={filterChange} />
 			<div className="right-container">
 				<div className="cards">
-					{items.length === 0 ? (
-						<p>loading data</p>
+					{status === "loading" ? (
+						<div>Loading...</div>
 					) : (
 						items.map((item) => {
 							return <Card key={item.id} item={item} />;
