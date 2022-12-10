@@ -7,28 +7,27 @@ import "./About.scss";
 
 export default function About() {
 	const fetch = async () => {
-		const res = await axios.get("/items", { params: { page, prices: JSON.stringify(filters.prices) } });
+		const res = await axios.get("/items", {
+			params: { page, materials: JSON.stringify(filters.materials), prices: JSON.stringify(filters.prices) },
+		});
 		return res.data;
 	};
 
 	const [page, setPage] = useState(0);
-	const [filters, setFilters] = useState({ prices: [] });
+	const [filters, setFilters] = useState({ materials: [], prices: [] });
 	// const [items, setItems] = useState([]);
 	const { data: items, status } = useQuery(["items", page, filters], fetch);
 	const [btnText, setBtnText] = useState("Refresh Database");
 
 	const filterChange = (val, type) => {
 		// This function updates the filters the user choose
-		//TODO: Implement material.
-		if (type === "material") {
-		}
-		if (type === "price") {
-			// Check if the selected price range already exists in the filters.prices array
-			const index = filters.prices.findIndex((price) => JSON.stringify(price) === JSON.stringify(val));
-			if (index !== -1) filters.prices.splice(index, 1);
-			else filters.prices.push(val);
-			setFilters({ ...filters });
-		}
+		const filterList = filters[type];
+		const index = filterList.findIndex((filter) => JSON.stringify(filter) === JSON.stringify(val));
+		// if exist remove, else add
+		if (index !== -1) filterList.splice(index, 1);
+		else filterList.push(val);
+
+		setFilters({ ...filters });
 	};
 
 	const refreshData = async () => {

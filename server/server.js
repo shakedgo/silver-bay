@@ -39,27 +39,39 @@ app.get("/refresh-data", (_req, res) => {
 });
 
 app.get("/items", (req, res) => {
-	let queryResult;
 	// prices=[{"low": NUM,"high": NUM},{"low": NUM,"high": NUM}]
 	let pageNum = req.query.page;
-	let payload = JSON.parse(req.query.prices);
-	let filters;
-	if (payload.length !== 0) {
-		// Creating a special query.
-		let priceFilters = payload.map((obj) => ({
-			price: {
-				$gte: obj.low,
-				$lte: obj.high,
-			},
-		}));
-		filters = { $or: priceFilters };
+	let prices = JSON.parse(req.query.prices);
+	let materials = JSON.parse(req.query.materials);
+	let filters = [];
+	let query;
+	// Creating a special query.
+	if (prices.length !== 0) {
+		prices.forEach((obj) => {
+			filters.push({
+				price: {
+					$gte: obj.low,
+					$lte: obj.high,
+				},
+			});
+		});
 	}
+	if (materials.length !== 0) {
+		materials.forEach((mat) => {
+			console.log(mat);
+			filters.push({
+				material: mat,
+			});
+		});
+	}
+	if (filters.length !== 0) query = { $or: filters };
 
 	(async () => {
+		let queryResult;
 		await client.connect();
-		if (filters !== undefined) {
+		if (query !== undefined) {
 			queryResult = await itemsCollection
-				.find(filters)
+				.find(query)
 				// TODO: replace skip - not good in large scales.
 				.skip(ITEMSINPAGE * pageNum)
 				.limit(ITEMSINPAGE)
