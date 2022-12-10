@@ -17,16 +17,16 @@ export default function About() {
 	const { data: items, status } = useQuery(["items", page, filters], fetch);
 	const [btnText, setBtnText] = useState("Refresh Database");
 
-	const filterChange = (e, type) => {
+	const filterChange = (val, type) => {
 		// This function updates the filters the user choose
 		//TODO: Implement material.
 		if (type === "material") {
 		}
-		//TODO: fix react query confusing querys.
-		// 100-499 + 500-999 -100-499 failed
 		if (type === "price") {
-			if (!JSON.stringify(filters.prices).includes(JSON.stringify(e))) filters.prices.push(e);
-			else filters.prices.splice(filters.prices.indexOf(e), 1);
+			// Check if the selected price range already exists in the filters.prices array
+			const index = filters.prices.findIndex((price) => JSON.stringify(price) === JSON.stringify(val));
+			if (index !== -1) filters.prices.splice(index, 1);
+			else filters.prices.push(val);
 			setFilters({ ...filters });
 		}
 	};
