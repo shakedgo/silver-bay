@@ -1,24 +1,27 @@
 import axios from "axios";
 import React, { lazy, Suspense, useState } from "react";
 import { useQuery } from "react-query";
-// import Card from "../Components/Card";
-// import Filter from "../Components/Filter";
 import "./About.scss";
 
+// Import components only when needed
 const Card = lazy(() => import("../Components/Card"));
 const Filter = lazy(() => import("../Components/Filter"));
 
 export default function About() {
 	const fetch = async () => {
 		const res = await axios.get("/items", {
-			params: { page, materials: JSON.stringify(filters.materials), prices: JSON.stringify(filters.prices) },
+			params: {
+				page,
+				materials: JSON.stringify(filters.materials),
+				prices: JSON.stringify(filters.prices),
+			},
 		});
 		return res.data;
 	};
 
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState({ materials: [], prices: [] });
-	// const [items, setItems] = useState([]);
+	// Items fetched by react-query
 	const { data: items, status } = useQuery(["items", page, filters], fetch);
 	const [btnText, setBtnText] = useState("Refresh Database");
 

@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function Filter({ changeState }) {
+	// TODO: Add Sorts
 	return (
 		<div className="filter-container">
 			<h4>Metal Type</h4>
