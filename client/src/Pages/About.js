@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { useQuery } from "react-query";
-import Card from "../Components/Card";
-import Filter from "../Components/Filter";
+// import Card from "../Components/Card";
+// import Filter from "../Components/Filter";
 import "./About.scss";
+
+const Card = lazy(() => import("../Components/Card"));
+const Filter = lazy(() => import("../Components/Filter"));
 
 export default function About() {
 	const fetch = async () => {
@@ -38,14 +41,20 @@ export default function About() {
 
 	return (
 		<div className="about">
-			<Filter changeState={filterChange} />
+			<Suspense>
+				<Filter changeState={filterChange} />
+			</Suspense>
 			<div className="right-container">
 				<div className="cards">
 					{status === "loading" ? (
 						<div>Loading...</div>
 					) : (
 						items.map((item) => {
-							return <Card key={item.id} item={item} />;
+							return (
+								<Suspense key={item.id}>
+									<Card key={item.id} item={item} />
+								</Suspense>
+							);
 						})
 					)}
 				</div>
