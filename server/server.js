@@ -44,12 +44,13 @@ app.get("/items", async (req, res) => {
 	let pageNum = req.query.page;
 	let prices = JSON.parse(req.query.prices);
 	let materials = JSON.parse(req.query.materials);
-	let filters = [];
+	let priceFilters = [];
+	let materialFilters = [];
 	let query;
 	// Creating a special query.
 	if (prices.length !== 0) {
 		prices.forEach((obj) => {
-			filters.push({
+			priceFilters.push({
 				price: {
 					$gte: obj.low,
 					$lte: obj.high,
@@ -59,13 +60,15 @@ app.get("/items", async (req, res) => {
 	}
 	if (materials.length !== 0) {
 		materials.forEach((mat) => {
-			console.log(mat);
-			filters.push({
+			materialFilters.push({
 				material: mat,
 			});
 		});
 	}
-	if (filters.length !== 0) query = { $or: filters };
+	if (priceFilters.length !== 0 && materialFilters.length !== 0)
+		query = { $and: [{ $or: materialFilters }, { $or: priceFilters }] };
+	else if (priceFilters.length !== 0) query = { $or: priceFilters };
+	else if (materialFilters.length !== 0) query = { $or: materialFilters };
 
 	let queryResult;
 	if (query !== undefined) {
