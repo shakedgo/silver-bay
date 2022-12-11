@@ -24,7 +24,6 @@ let objectCounter;
 (async () => {
 	await client.connect();
 	firstItem = await itemsCollection.findOne();
-	client.close();
 	// Saving the data,machineid, processid from ObjectId
 	objectData = firstItem._id.toString().slice(0, 18);
 	// Saving and parsing the counter of ObjectId
@@ -38,7 +37,7 @@ app.get("/refresh-data", (_req, res) => {
 	})();
 });
 
-app.get("/items", (req, res) => {
+app.get("/items", async (req, res) => {
 	// prices=[{"low": NUM,"high": NUM},{"low": NUM,"high": NUM}]
 	let pageNum = req.query.page;
 	let prices = JSON.parse(req.query.prices);
@@ -66,31 +65,27 @@ app.get("/items", (req, res) => {
 	}
 	if (filters.length !== 0) query = { $or: filters };
 
-	(async () => {
-		let queryResult;
-		await client.connect();
-		if (query !== undefined) {
-			queryResult = await itemsCollection
-				.find(query)
-				// TODO: replace skip - not good in large scales.
-				.skip(ITEMSINPAGE * pageNum)
-				.limit(ITEMSINPAGE)
-				.toArray();
-		} else {
-			// Getting the specific items that are relevant to the page.
-			// Adding ObjectData to the Counter with our page number.
-			queryResult = await itemsCollection
-				.find({
-					_id: {
-						$gt: ObjectId(objectData + (objectCounter + pageNum * ITEMSINPAGE - 1).toString(16)),
-					},
-				})
-				.limit(ITEMSINPAGE)
-				.toArray();
-		}
-		res.json(queryResult);
-		client.close();
-	})();
+	let queryResult;
+	if (query !== undefined) {
+		queryResult = await itemsCollection
+			.find(query)
+			// TODO: replace skip - not good in large scales.
+			.skip(ITEMSINPAGE * pageNum)
+			.limit(ITEMSINPAGE)
+			.toArray();
+	} else {
+		// Getting the specific items that are relevant to the page.
+		// Adding ObjectData to the Counter with our page number.
+		queryResult = await itemsCollection
+			.find({
+				_id: {
+					$gt: ObjectId(objectData + (objectCounter + pageNum * ITEMSINPAGE - 1).toString(16)),
+				},
+			})
+			.limit(ITEMSINPAGE)
+			.toArray();
+	}
+	res.json(queryResult);
 });
 
 const port = process.env.PORT || 4000;
