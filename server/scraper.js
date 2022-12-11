@@ -1,7 +1,8 @@
-const puppeteer = require("puppeteer");
-const cheerio = require("cheerio");
-const { client } = require("./server");
-require("dotenv").config();
+import { launch } from "puppeteer";
+import { load } from "cheerio";
+import dotenv from "dotenv";
+import client from "./server.js";
+dotenv.config();
 
 const URL = "https://www.apmex.com/category/10010/gold-coins?page=3"; // site we scrape
 
@@ -11,7 +12,7 @@ const scrape = async () => {
 
 	//Getting page data from dynamic page, using puppeteer.
 	console.log("Loading page...");
-	const browser = await puppeteer.launch();
+	const browser = await launch();
 	const page = await browser.newPage();
 	await page.goto(URL, { waitUntil: "networkidle2", timeout: 0 });
 	const resultsSelector = ".item-link";
@@ -21,7 +22,7 @@ const scrape = async () => {
 
 	//scraping the items data with cheerio for convenience.
 	console.log("Starting scrape...");
-	const $ = cheerio.load(pageData);
+	const $ = load(pageData);
 	$(".mod-product-card").each((i, element) => {
 		let item = {
 			id: $(element).find(".item-link").attr("data-product-id"),
@@ -51,4 +52,4 @@ const scrape = async () => {
 	// client.close();
 };
 scrape();
-module.exports = { scrape };
+export default scrape;

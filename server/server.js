@@ -1,10 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+import express, { json } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
+dotenv.config();
 const app = express();
-app.use(express.json());
+app.use(json());
 app.use(cors());
 
 const ITEMSINPAGE = 5;
@@ -15,8 +16,7 @@ const client = new MongoClient(uri, {
 	useUnifiedTopology: true,
 	serverApi: ServerApiVersion.v1,
 });
-module.exports = { client };
-
+export default client;
 const itemsCollection = client.db("silver-bay").collection("items");
 
 let firstItem;
@@ -31,12 +31,9 @@ let objectCounter;
 	objectCounter = parseInt(firstItem._id.toString().slice(18), 16);
 })();
 
-app.get("/refresh-data", (_req, res) => {
-	(async () => {
-		const { scrape } = require("./scraper");
-		await scrape();
-		res.send("done");
-	})();
+app.get("/refresh-data", async (_req, res) => {
+	(await import("./scraper.js")).default;
+	res.send("done");
 });
 
 app.get("/items", async (req, res) => {
