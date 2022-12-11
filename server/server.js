@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-// const { scrape } = require("./scraper"); // Add lazy loading
 
 const app = express();
 app.use(express.json());
@@ -16,6 +15,8 @@ const client = new MongoClient(uri, {
 	useUnifiedTopology: true,
 	serverApi: ServerApiVersion.v1,
 });
+module.exports = { client };
+
 const itemsCollection = client.db("silver-bay").collection("items");
 
 let firstItem;
@@ -32,6 +33,7 @@ let objectCounter;
 
 app.get("/refresh-data", (_req, res) => {
 	(async () => {
+		const { scrape } = require("./scraper");
 		await scrape();
 		res.send("done");
 	})();

@@ -1,15 +1,9 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { client } = require("./server");
 require("dotenv").config();
 
 const URL = "https://www.apmex.com/category/10010/gold-coins?page=3"; // site we scrape
-const uri = process.env.MONGO;
-const client = new MongoClient(uri, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	serverApi: ServerApiVersion.v1,
-});
 
 // TODO: If price is "" set it to "price is not specified".
 const scrape = async () => {
@@ -54,7 +48,7 @@ const scrape = async () => {
 	console.log(items.length + " New items.");
 	if (items.length !== 0) await collection.insertMany(items);
 	console.log("Database updated successfully.");
-	client.close();
+	// client.close();
 };
 scrape();
 module.exports = { scrape };
