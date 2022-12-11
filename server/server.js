@@ -26,9 +26,9 @@ let objectCounter;
 	await client.connect();
 	firstItem = await itemsCollection.findOne();
 	// Saving the data,machineid, processid from ObjectId
-	objectData = firstItem._id.toString().slice(0, 18);
+	objectData = firstItem._id.toHexString().slice(0, 18);
 	// Saving and parsing the counter of ObjectId
-	objectCounter = parseInt(firstItem._id.toString().slice(18), 16);
+	objectCounter = parseInt(firstItem._id.toHexString().slice(18), 16);
 })();
 
 app.get("/refresh-data", async (_req, res) => {
