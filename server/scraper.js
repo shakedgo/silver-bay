@@ -49,7 +49,7 @@ const scrape = async () => {
 	console.log(items.length + " New items.");
 	if (items.length !== 0) await collection.insertMany(items);
 	console.log("Database updated successfully.");
-	// client.close();
+	return "done";
 };
-scrape();
+// scrape();
 export default scrape;

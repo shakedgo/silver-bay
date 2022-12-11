@@ -32,7 +32,8 @@ let objectCounter;
 })();
 
 app.get("/refresh-data", async (_req, res) => {
-	(await import("./scraper.js")).default;
+	let scrape = (await import("./scraper.js")).default;
+	await scrape();
 	res.send("done");
 });
 
